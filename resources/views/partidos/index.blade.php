@@ -20,8 +20,10 @@
             <tr>
                 <td>{{ $partido->equipo_local }}</td>
                 <td>{{ $partido->equipo_visitante }}</td>
-                <td>{{ \Carbon\Carbon::parse($partido->fecha_hora_juego)->format('d/m/Y H:i') }}</td>
+                <td>{{ $partido->fecha_hora_juego->format('d/m/Y H:i') }}</td>
                 <td>
+                    <a href="{{ route('partidos.paneljuego', $partido->id) }}" class="btn btn-primary">Panel de Juego</a>
+                    <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-warning">Editar</a>
                     <form action="{{ route('partidos.destroy', $partido->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')

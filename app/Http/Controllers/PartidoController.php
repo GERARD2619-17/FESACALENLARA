@@ -12,7 +12,6 @@ class PartidoController extends Controller
      */
     public function index(Request $request)
     {
-        // Verifica si la solicitud es AJAX
         if ($request->ajax()) {
             $partidos = Partido::all();
             $events = [];
@@ -53,14 +52,15 @@ class PartidoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $partido = new Partido();
-        $partido->equipo_local = $request->input('equipo_local');
-        $partido->equipo_visitante = $request->input('equipo_visitante');
-        $partido->fecha_hora_juego = $request->input('fecha_hora_juego');
-        $partido->save();
+        $request->validate([
+            'equipo_local' => 'required',
+            'equipo_visitante' => 'required',
+            'fecha_hora_juego' => 'required|date',
+        ]);
 
-        return response()->json(['id' => $partido->id]);
+        $partido = Partido::create($request->all());
+
+        return redirect()->route('partidos.index')->with('success', 'Partido creado exitosamente');
     }
 
     /**
@@ -81,7 +81,6 @@ class PartidoController extends Controller
         //
         $partido = Partido::find($id);
         return view('partidos.edit', compact('partido'));
-    
     }
 
     /**
@@ -91,10 +90,7 @@ class PartidoController extends Controller
     {
         //
         $partido = Partido::find($id);
-        $partido->equipo_local = $request->input('equipo_local');
-        $partido->equipo_visitante = $request->input('equipo_visitante');
-        $partido->fecha_hora_juego = $request->input('fecha_hora_juego');
-        $partido->save();
+        $partido->update($request->all());
 
         return response()->json('Event updated');
     }
@@ -117,5 +113,71 @@ class PartidoController extends Controller
         return view('partidos.calendar', compact('partidos'));
     }
 
-    
+    public function paneljuego($id)
+    {
+        $partido = Partido::findOrFail($id);
+        return view('partidos.paneljuego', compact('partido'));
+    }
+
+    public function actualizarMarcador(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $equipo = $request->input('equipo');
+
+        if ($equipo == 'local') {
+            $partido->goles_local++;
+        } elseif ($equipo == 'visitante') {
+            $partido->goles_visitante++;
+        }
+
+        $partido->save();
+
+        return response()->json([
+            'goles_local' => $partido->goles_local,
+            'goles_visitante' => $partido->goles_visitante
+        ]);
+    }
+
+    public function actualizarTiempo(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $partido->tiempo_transcurrido = $request->input('tiempo');
+        $partido->save();
+
+        return response()->json(['tiempo' => $partido->tiempo_transcurrido]);
+    }
+
+    public function cambiarEstado(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $partido->estado = $request->input('estado');
+        $partido->save();
+
+        return response()->json(['estado' => $partido->estado]);
+    }
+
+    public function actualizarTarjetas(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $equipo = $request->input('equipo');
+        $tipo = $request->input('tipo');
+
+        $campo = "tarjetas_{$tipo}s_{$equipo}";
+        $partido->$campo++;
+        $partido->save();
+
+        return response()->json([$campo => $partido->$campo]);
+    }
+
+    public function asignarPenal(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $equipo = $request->input('equipo');
+
+        $campo = "penales_{$equipo}";
+        $partido->$campo++;
+        $partido->save();
+
+        return response()->json([$campo => $partido->$campo]);
+    }
 }
