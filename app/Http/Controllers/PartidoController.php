@@ -29,7 +29,6 @@ class PartidoController extends Controller
             return response()->json($events);
         }
 
-        // Si no es una solicitud AJAX, devuelve la vista normal
         $partidos = Partido::all();
         return view('partidos.index', compact('partidos'));
     }
