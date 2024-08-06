@@ -24,8 +24,8 @@ class Jugador extends Model
         'fecha_nacimiento' => 'date',
     ];
 
-    public function equipoRelacion()
+    public function partidos()
     {
-        return $this->belongsTo(Partido::class, 'equipo', 'nombre');
+        return $this->belongsToMany(Partido::class, 'jugador_partido', 'jugador_id', 'partido_id');
     }
 }
