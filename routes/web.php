@@ -14,12 +14,14 @@ Route::put('partidos/{id}', [PartidoController::class, 'update'])->name('partido
 Route::delete('partidos/{id}', [PartidoController::class, 'destroy'])->name('partidos.destroy');
 Route::get('partidos/calendar', [PartidoController::class, 'calendar'])->name('partidos.calendar');
 Route::get('partidos/{id}/paneljuego', [PartidoController::class, 'paneljuego'])->name('partidos.paneljuego');
-
 Route::post('partidos/{id}/actualizar-marcador', [PartidoController::class, 'actualizarMarcador'])->name('partidos.actualizarMarcador');
 Route::post('partidos/{id}/actualizar-tiempo', [PartidoController::class, 'actualizarTiempo'])->name('partidos.actualizarTiempo');
-Route::post('partidos/{id}/cambiar-estado', [PartidoController::class, 'cambiarEstado'])->name('partidos.cambiarEstado');
+Route::post('/partidos/{partido}/actualizar-estado', [PartidoController::class, 'actualizarEstado'])->name('partidos.actualizarEstado');
+Route::post('partidos/{id}/actualizar-tarjetas', [PartidoController::class, 'actualizarTarjetas'])->name('partidos.actualizarTarjetas');
+Route::post('partidos/{id}/asignar-penal', [PartidoController::class, 'asignarPenal'])->name('partidos.asignarPenal');
 
-
+// Nueva ruta para obtener la lista de partidos actualizada
+Route::get('/partidos/lista', [PartidoController::class, 'lista'])->name('partidos.lista');
 
 
 /*Route::get('/', function () {

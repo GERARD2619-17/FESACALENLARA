@@ -138,30 +138,39 @@ class PartidoController extends Controller
         ]);
     }
 
-    public function cambiarEstado(Request $request, $id)
+    public function actualizarTiempo(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $partido->tiempo_transcurrido = $request->input('tiempo');
+        $partido->save();
+
+        return response()->json(['tiempo' => $partido->tiempo_transcurrido]);
+    }
+
+    /*public function cambiarEstado(Request $request, $id)
     {
         $partido = Partido::findOrFail($id);
         $partido->estado = $request->input('estado');
         $partido->save();
 
-        if ($equipo == 'local') {
-            if ($tipo == 'amarilla') {
-                $partido->tarjetas_amarillas_local++;
-            } elseif ($tipo == 'roja') {
-                $partido->tarjetas_rojas_local++;
-            } elseif ($tipo == 'verde') {
-                $partido->tarjetas_verdes_local++;
-            }
-        } else {
-            if ($tipo == 'amarilla') {
-                $partido->tarjetas_amarillas_visitante++;
-            } elseif ($tipo == 'roja') {
-                $partido->tarjetas_rojas_visitante++;
-            } elseif ($tipo == 'verde') {
-                $partido->tarjetas_verdes_visitante++;
-            }
-        }
-    
+        return response()->json(['estado' => $partido->estado]);
+    }*/
+    public function actualizarEstado(Request $request, Partido $partido)
+    {
+        $partido->estado = $request->estado;
+        $partido->save();
+
+        return response()->json(['estado' => $partido->estado]);
+    }
+
+    public function actualizarTarjetas(Request $request, $id)
+    {
+        $partido = Partido::findOrFail($id);
+        $equipo = $request->input('equipo');
+        $tipo = $request->input('tipo');
+
+        $campo = "tarjetas_{$tipo}s_{$equipo}";
+        $partido->$campo++;
         $partido->save();
 
         return response()->json([$campo => $partido->$campo]);
@@ -177,5 +186,11 @@ class PartidoController extends Controller
         $partido->save();
 
         return response()->json([$campo => $partido->$campo]);
+    }
+
+    public function lista()
+    {
+        $partidos = Partido::all();
+        return response()->json(['partidos' => $partidos]);
     }
 }
