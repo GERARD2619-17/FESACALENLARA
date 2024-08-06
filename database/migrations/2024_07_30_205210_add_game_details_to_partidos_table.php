@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('partidos', function (Blueprint $table) {
-            //esto es para que se comunique con el panel de juego
             $table->integer('goles_local')->default(0);
             $table->integer('goles_visitante')->default(0);
             $table->integer('tiempo_transcurrido')->default(0);

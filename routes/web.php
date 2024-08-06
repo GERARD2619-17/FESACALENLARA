@@ -20,8 +20,6 @@ Route::post('partidos/{id}/actualizar-tiempo', [PartidoController::class, 'actua
 Route::post('partidos/{id}/cambiar-estado', [PartidoController::class, 'cambiarEstado'])->name('partidos.cambiarEstado');
 
 
-Route::post('partidos/{id}/actualizar-tarjetas', [PartidoController::class, 'actualizarTarjetas'])->name('partidos.actualizarTarjetas');
-Route::post('partidos/{id}/asignar-penal', [PartidoController::class, 'asignarPenal'])->name('partidos.asignarPenal');
 
 
 /*Route::get('/', function () {
